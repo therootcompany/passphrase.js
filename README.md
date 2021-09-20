@@ -3,7 +3,9 @@
 A ([BIP-39][bip39] compatible) base2048 passphrase generator for browser
 JavaScript.
 
-Lightweight. Zero dependencies. < 150 LoC. 20kb (17kb min, 7.4kb gz)
+Lightweight. Zero dependencies. 20kb (17kb min, 7.4kb gz) ~150 LoC.
+
+(most of the package weight is due to the base2048 word list)
 
 [bip39]: https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki
 [passphrasejs]: https://github.com/therootcompany/passphrase.js
