@@ -89,3 +89,12 @@ Passphrase.base2048.includes("broccoli"); // true
 ```js
 Passphrase.base2048.includes("brocolli"); // false
 ```
+
+#### Get all misspelled words
+
+```js
+"hammer spoon brocolli zoo".split(" ").filter(function (word) {
+  return word && !Passphrase.base2048.includes(word);
+});
+// [ "brocolli" ]
+```
