@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>
+        <a href="https://github.com/therootcompany/passphrase.js"
+          >Passphrase.js</a
+        >
+      </h1>
+      <p>
+        <strong>Passphrase &amp; Key Generator</strong> for Browser JavaScript.
+      </p>
+      <p>BIP-39 (Base2048) Compatible. Lightweight. Zero Dependencies.</p>
+      <p>
+        <small
+          >20kb with comments. 17kb minified. 7.4kb gzipped. ~150 LoC.</small
+        >
+      </p>
+    </header>
+
+    <main>
+      <section>
+        <button class="js-generate">Generate New Passphrase</button>
+      </section>
+      <section>
+        <form>
+          <label
+            >Passphrase:
+            <textarea class="js-passphrase" cols="25" rows="4">
+ozone drill grab fiber curtain grace pudding thank cruise elder eight picnic</textarea
+            >
+          </label>
+          <label
+            >Salt:
+            <input class="js-salt" value="TREZOR" />
+          </label>
+
+          <button type="submit">Derive Key</button>
+        </form>
+      </section>
+
+      <section>
+        <pre>Key: <code class="js-key"></code></pre>
+      </section>
+
+      <hr />
+      <section>
+        <header>
+          <h3>Browser Compatibility</h3>
+        </header>
+        <pre><code class="js-tests">Running tests... (or tests failed)</code></pre>
+      </section>
+    </main>
+
+    <script src="./passphrase.js"></script>
+    <script>
+      function $(sel, el) {
+        return (el || document).querySelector(sel);
+      }
+
+      function $$(sel, el) {
+        return (el || document).querySelectorAll(sel);
+      }
+
+      function rethrow(err) {
+        window.alert(err.message);
+        throw err;
+      }
+
+      async function deriveKey() {
+        let passphrase = $(".js-passphrase").value;
+        let salt = $(".js-salt").value;
+
+        await Passphrase.checksum(passphrase).catch(rethrow);
+        let key = await Passphrase.pbkdf2(passphrase, salt);
+        $(".js-key").innerText = PassphraseTest.bytesToHex(key);
+      }
+
+      $(".js-generate").addEventListener("click", async function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        let passphrase = await Passphrase.generate(128).catch(rethrow);
+        await Passphrase.checksum(passphrase).catch(rethrow);
+        $(".js-passphrase").value = passphrase;
+        await deriveKey();
+      });
+
+      $("form").addEventListener("submit", async function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        await deriveKey();
+      });
+
+      deriveKey().catch(rethrow);
+    </script>
+
+    <script src="./test.js"></script>
+    <script>
+      PassphraseTest.run()
+        .then(function () {
+          document.querySelector(".js-tests").innerText = "All Tests Pass";
+        })
+        .catch(function () {
+          document.querySelector(".js-tests").innerText = "Tests FAILED";
+        });
+    </script>
+  </body>
+</html>
