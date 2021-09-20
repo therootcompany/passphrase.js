@@ -1,0 +1,31 @@
+{
+  "name": "@root/passphrase",
+  "version": "1.0.0",
+  "description": "A (BIP-39 compatible) base2048 passphrase generator for browser JavaScript.",
+  "main": "passphrase.js",
+  "scripts": {
+    "test": "open index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/therootcompany/passphrase.js.git"
+  },
+  "keywords": [
+    "bip-39",
+    "bip39",
+    "base2048",
+    "word",
+    "list",
+    "passphrase",
+    "encryption",
+    "key",
+    "aes",
+    "wallet"
+  ],
+  "author": "AJ ONeal <coolaj86@gmail.com> (https://coolaj86.com/)",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/therootcompany/passphrase.js/issues"
+  },
+  "homepage": "https://github.com/therootcompany/passphrase.js#readme"
+}
