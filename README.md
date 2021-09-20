@@ -1,7 +1,7 @@
 # [passphrase.js][passphrasejs] (for browsers)
 
-A ([BIP-39][bip39] compatible) base2048 passphrase generator for browser
-JavaScript.
+A ([BIP-39][bip39] compatible) **Base2048 Passphrase & Key Generator**
+for browser JavaScript.
 
 Lightweight. Zero dependencies. 20kb (17kb min, 7.4kb gz) ~150 LoC.
 
@@ -12,15 +12,21 @@ Lightweight. Zero dependencies. 20kb (17kb min, 7.4kb gz) ~150 LoC.
 
 ```html
 <script src="https://unpkg.com/@root/passphrase"></script>
-<script>
+<script type="module">
   "use strict";
 
   let Passphrase = window.Passphrase;
 
-  Passphrase.generate(128).then(console.log);
+  let passphrase = await Passphrase.generate(128);
   // often delay margin arch
   // index wrap fault duck
   // club fabric demise scout
+  
+  let keyBytes = await Passphrase.pbkdf2(passphrase);
+  // Uint8Array[64] (suitable for use with importKey for AES, etc)
+  
+  let fooKeyBytes = await Passphrase.pbkdf2(passphrase, "foo");
+  // Uint8Array[64] (a completely different key, determined by "foo")
 </script>
 ```
 
@@ -31,6 +37,15 @@ Lightweight. Zero dependencies. 20kb (17kb min, 7.4kb gz) ~150 LoC.
 | 192-bit        | 18 words @ 11 bits each | = 198 bits (192 bits + 6-bit checksum) |
 | 224-bit        | 21 words @ 11 bits each | = 231 bits (224 bits + 7-bit checksum) |
 | 256-bit        | 24 words @ 11 bits each | = 264 bits (256 bits + 8-bit checksum) |
+
+## Features
+
+- [x] Base2048 (BIP-0039 compliant)
+- [x] Easy to retype on different devices
+- [x] Seed many, distinct keys from a single passphrase
+- [x] AES Encryption & Decryption
+- [x] Air Gap security
+- [x] Cryptocurrency wallets
 
 ## API
 
@@ -44,7 +59,7 @@ Lightweight. Zero dependencies. 20kb (17kb min, 7.4kb gz) ~150 LoC.
 Generate a "Base2048" passphrase - each word represents 11 bits of entropy.
 
 ```js
-await Passphrase.generate((bitLen = 128)); // 128, 160, 192, 224, or 256
+await Passphrase.generate(bitLen); // *128*, 160, 192, 224, or 256
 ```
 
 ### Passphrase.checksum(passphrase)
@@ -75,7 +90,7 @@ other string - whether a salt, a password, another passphrase or secret, or an
 id of some kind.
 
 ```js
-await Passphrase.pbkdf2(passphrase, (other = "")); // Uin8Array[32]
+await Passphrase.pbkdf2(passphrase, other || ""); // Uint8Array[64]
 ```
 
 ### Passphrase.base2048.includes(word)
