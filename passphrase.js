@@ -147,7 +147,6 @@ var Passphrase = {};
     hashname
   ) {
     let extractable = false;
-    console.log("DEBUG", bytes);
 
     // First, create a PBKDF2 "key" containing the password
     let passphraseKey = await crypto.subtle.importKey(
@@ -158,7 +157,6 @@ var Passphrase = {};
       ["deriveKey"]
     );
 
-    console.log("DEBUG", salt);
     // Derive a key from the password
     extractable = true;
     let hmacKey = await crypto.subtle.deriveKey(
