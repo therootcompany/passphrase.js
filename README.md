@@ -38,12 +38,12 @@ Lightweight. Zero dependencies. 20kb (17kb min, 7.4kb gz) ~150 LoC.
 | 224-bit        | 21 words @ 11 bits each | = 231 bits (224 bits + 7-bit checksum) |
 | 256-bit        | 24 words @ 11 bits each | = 264 bits (256 bits + 8-bit checksum) |
 
-## Features
+## Features & Use Cases
 
 - [x] Base2048 (BIP-0039 compliant)
 - [x] Easy to retype on different devices
 - [x] Seed many, distinct keys from a single passphrase
-- [x] AES Encryption & Decryption
+- [x] Keys for AES Encryption & Decryption
 - [x] Air Gap security
 - [x] Cryptocurrency wallets
 
