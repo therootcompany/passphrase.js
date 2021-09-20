@@ -1,6 +1,6 @@
 {
   "name": "@root/passphrase",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A (BIP-39 compatible) base2048 passphrase generator for browser JavaScript.",
   "main": "passphrase.js",
   "scripts": {
@@ -11,15 +11,16 @@
     "url": "git+https://github.com/therootcompany/passphrase.js.git"
   },
   "keywords": [
-    "bip-39",
+    "bip-0039",
     "bip39",
     "base2048",
+    "passphrase",
     "word",
     "list",
-    "passphrase",
+    "aes",
     "encryption",
     "key",
-    "aes",
+    "bip-39",
     "wallet"
   ],
   "author": "AJ ONeal <coolaj86@gmail.com> (https://coolaj86.com/)",
