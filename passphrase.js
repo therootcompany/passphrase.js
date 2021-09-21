@@ -30,11 +30,16 @@ var Passphrase = {};
     let byteLen = bitLen / 8;
     // ent
     let bytes = crypto.getRandomValues(new Uint8Array(byteLen));
-    return await Passphrase._generate(bytes);
+    return await Passphrase.encode(bytes);
   };
 
-  // same as above, but you provide the bytes
-  Passphrase._generate = async function (bytes) {
+  /**
+   * @param {ArrayLike<number>} bytes - The bytes to encode as a word list
+   * @returns {string} - The passphrase will be a space-delimited list of 12,
+   *                     15, 18, 21, or 24 words from the "base2048" word list
+   *                     dictionary.
+   */
+  Passphrase.encode = async function (bytes) {
     let bitLen = 8 * bytes.length;
     // cs
     let sumBitLen = bitLen / 32;
@@ -68,6 +73,15 @@ var Passphrase = {};
    *                      match the expected values.
    */
   Passphrase.checksum = async function (passphrase) {
+    await Passphrase.decode(passphrase);
+    return true;
+  };
+
+  /**
+   * @param {string} passphrase - The bytes to encode as a word list
+   * @returns {Uint8Array} - The byte representation of the passphrase.
+   */
+  Passphrase.decode = async function (passphrase) {
     passphrase = Passphrase._normalize(passphrase);
 
     // there must be 12, 15, 18, 21, or 24 words
@@ -75,7 +89,9 @@ var Passphrase = {};
       // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize
       // 0-2047 (11-bit ints)
       let index = Passphrase.base2048.indexOf(word);
-      // TODO throw on -1?
+      if (index < 0) {
+        throw new Error(`passphrase.js: decode failed: unknown word '${word}'`);
+      }
       arr.push(index);
       return arr;
     }, []);
@@ -90,7 +106,7 @@ var Passphrase = {};
     let sumBitLen = Math.floor(digits.length / 32);
     let bitLen = digits.length - sumBitLen;
 
-    let checksum1 = digits.slice(-sumBitLen);
+    let checksum = digits.slice(-sumBitLen);
     let bytesArr = [];
     for (let bit = 0; bit < bitLen; bit += 8) {
       let bytestring = digits.slice(bit, bit + 8);
@@ -104,12 +120,14 @@ var Passphrase = {};
     let bytes = Uint8Array.from(bytesArr);
 
     let hash = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
-    let checksum2 = hash[0].toString(2).padStart(8, "0").slice(0, sumBitLen);
-    if (checksum1 !== checksum2) {
-      throw new Error("passphrase.js: passphrase fails checksum");
+    let expected = hash[0].toString(2).padStart(8, "0").slice(0, sumBitLen);
+    if (expected !== checksum) {
+      throw new Error(
+        `passphrase.js: bad checksum: expected '${expected}' but got '${checksum}'`
+      );
     }
 
-    return true;
+    return bytes;
   };
 
   /**

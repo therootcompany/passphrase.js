@@ -111,8 +111,11 @@ ozone drill grab fiber curtain grace pudding thank cruise elder eight picnic</te
         .then(function () {
           document.querySelector(".js-tests").innerText = "All Tests Pass";
         })
-        .catch(function () {
-          document.querySelector(".js-tests").innerText = "Tests FAILED";
+        .catch(function (err) {
+          console.error(err);
+          document.querySelector(
+            ".js-tests"
+          ).innerText = `Tests FAILED: ${err.message}`;
         });
     </script>
   </body>

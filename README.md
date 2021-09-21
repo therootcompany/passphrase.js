@@ -1,7 +1,7 @@
 # [passphrase.js][passphrasejs] (for browsers)
 
-A ([BIP-39][bip39] compatible) **Base2048 Passphrase & Key Generator**
-for browser JavaScript.
+A ([BIP-39][bip39] compatible) **Base2048 Passphrase & Key Generator** for
+browser JavaScript.
 
 Lightweight. Zero dependencies. 20kb (17kb min, 7.4kb gz) ~150 LoC.
 
@@ -21,10 +21,10 @@ Lightweight. Zero dependencies. 20kb (17kb min, 7.4kb gz) ~150 LoC.
   // often delay margin arch
   // index wrap fault duck
   // club fabric demise scout
-  
+
   let keyBytes = await Passphrase.pbkdf2(passphrase);
   // Uint8Array[64] (suitable for use with importKey for AES, etc)
-  
+
   let fooKeyBytes = await Passphrase.pbkdf2(passphrase, "foo");
   // Uint8Array[64] (a completely different key, determined by "foo")
 </script>
@@ -50,7 +50,9 @@ Lightweight. Zero dependencies. 20kb (17kb min, 7.4kb gz) ~150 LoC.
 ## API
 
 - generate
+  - encode
 - checksum
+  - decode
 - pbkdf2
 - base2048.includes
 
@@ -60,6 +62,18 @@ Generate a "Base2048" passphrase - each word represents 11 bits of entropy.
 
 ```js
 await Passphrase.generate(bitLen); // *128*, 160, 192, 224, or 256
+```
+
+### Passphrase.encode(bytes)
+
+Encode an array of 16, 20, 24, 28, or 32 bytes (typically a `Uint8Array`) into a
+passphrase using the Base2048 word list dictionary.
+
+```js
+let bytes = Uint8Array.from([0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255]);
+
+await Passphrase.encode(bytes);
+// "abstract way divert acid useless legend advance theme youth"
 ```
 
 ### Passphrase.checksum(passphrase)
@@ -81,6 +95,21 @@ await Passphrase.checksum(passphrase).catch(function (err) {
   // checksum failed?
   throw err;
 });
+```
+
+### Passphrase.decode(words)
+
+Decode an string of space-delimited words from the Base2048 dictionary into a
+Uint8Array.
+
+This will throw an error if any non-Base2048-compatible words are used, or if
+the checksum does not match.
+
+```js
+let words = "abstract way divert acid useless legend advance theme youth";
+
+await Passphrase.decode(words);
+// Uint8Array[12] <0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255>
 ```
 
 ### Passphrase.pbkdf2(passphrase, other)

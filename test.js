@@ -194,7 +194,7 @@ var PassphraseTest = {};
       let knownWords = test[1];
       let knownKey = test[2];
 
-      let words = await Passphrase._generate(hexToBuffer(knownEnt));
+      let words = await Passphrase.encode(hexToBuffer(knownEnt));
       if (words !== knownWords) {
         console.warn(knownWords);
         console.warn(words);
@@ -209,6 +209,22 @@ var PassphraseTest = {};
         throw new Error("bad checksum");
       }
     }, Promise.resolve());
+
+    await Passphrase.checksum(
+      "apple apple apple apple apple apple apple apple apple apple apple apple"
+    ).catch(function (err) {
+      console.error("err", err);
+      if (!err.message.includes("checksum")) {
+        throw err;
+      }
+    });
+
+    await Passphrase.checksum("a a a a a a a a a a a a").catch(function (err) {
+      console.error("err", err);
+      if (!err.message.includes("word")) {
+        throw err;
+      }
+    });
 
     console.info("Tests Pass");
   };
