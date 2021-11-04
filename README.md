@@ -81,7 +81,7 @@ await Passphrase.encode(bytes);
 We all make mistakes. Especially typos.
 
 Running the checksum can't guarantee that the passphrase is correct, but most
-types - such as `brocolli` instead of `broccoli` - will cause it to fail, so
+typos - such as `brocolli` instead of `broccoli` - will cause it to fail, so
 that's a start.
 
 ```js
